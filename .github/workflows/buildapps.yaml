@@ -48,7 +48,7 @@ jobs:
 #          cd users-service
 #          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots test
       - name: Running Containers
-        run: docker ps -a
+        run: docker ps
       - name: Stop Containers
         if: always()
         continue-on-error: true

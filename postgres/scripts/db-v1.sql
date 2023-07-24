@@ -1,4 +1,4 @@
-CREATE DATABASE  department_micro;
+CREATE DATABASE department_micro;
 GRANT ALL PRIVILEGES ON DATABASE department_micro TO program;
 
 CREATE DATABASE users_micro;
