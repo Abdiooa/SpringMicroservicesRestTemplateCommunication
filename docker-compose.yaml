@@ -1,0 +1,27 @@
+version: "3.1"
+services:
+  usersapp:
+    container_name: springusers
+    image: springusers
+    build: users-service/
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+      - departementapp
+  departementapp:
+    container_name: springdepartement
+    image: springdepartement
+    ports:
+      - "8082:8082"
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=dadinos
+      - POSTGRES_USER=postgres
+      - POSTGRES_MULTIPLE_DATABASES=postgres,users_micro,department_micro
