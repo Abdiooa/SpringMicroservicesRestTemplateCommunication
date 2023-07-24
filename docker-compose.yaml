@@ -20,9 +20,16 @@ services:
   db:
     container_name: db
     image: postgres
+    restart: on-failure
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=dadinos
       - POSTGRES_USER=postgres
-      - POSTGRES_MULTIPLE_DATABASES=postgres,users_micro,department_micro
+      - POSTGRES_PASSWORD=dadinos
+      - POSTGRES_DATABASE=postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./postgres/:/docker-entrypoint-initdb.d/
+
+volumes:
+  db-data
