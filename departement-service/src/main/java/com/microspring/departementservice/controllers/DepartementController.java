@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
@@ -39,6 +41,15 @@ public class DepartementController {
             return new ResponseEntity<>("Departement Not found",HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("")
+    public ResponseEntity<?> getALlDepartments(){
+        try{
+            List<DepartementResponse>  departementResponses= departementService.getAllDepartments();
+            return new ResponseEntity<>(departementResponses,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 }

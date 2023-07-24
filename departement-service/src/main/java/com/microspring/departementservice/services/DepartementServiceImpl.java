@@ -9,6 +9,7 @@ import com.microspring.departementservice.models.Departement;
 import com.microspring.departementservice.repositories.DepartementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +21,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DepartementServiceImpl implements DepartementService{
     private final DepartementRepository departementRepository;
-
+    private final ModelMapper mapper;
     @Override
     public List<DepartementResponse> getAllDepartments() {
-        return departementRepository.findAll().stream().map(this::mapToDepartmentResponse).collect(Collectors.toList());
+        //return departementRepository.findAll().stream().map(this::mapToDepartmentResponse).collect(Collectors.toList());
+        //return departementRepository.findAll().stream().map(this::mapToDepartmentResponse).collect(Collectors.toList());
+        List<Departement> departements = departementRepository.findAll();
+        return departements.stream()
+                .map(departement -> mapper.map(departement,DepartementResponse.class))
+                .collect(Collectors.toList());
     }
     @Override
     public DepartementResponse saveDepartement(DepartementRequest departementRequest) {
@@ -31,16 +37,18 @@ public class DepartementServiceImpl implements DepartementService{
             throw new DepartmentWithThatNameAlreadyExist();
         }
         validateInput(departementRequest);
-        Departement departement = mapToDepartment(departementRequest);
+        Departement departement = mapper.map(departementRequest,Departement.class);
+//        Departement departement = mapToDepartment(departementRequest);
         departementRepository.save(departement);
         log.info("Department with the id {} is saved",departement.getId());
-        return mapToDepartmentResponse(departement);
+        DepartementResponse departementResponse = mapper.map(departement,DepartementResponse.class);
+        //return mapToDepartmentResponse(departement);
+        return departementResponse;
     }
 
 
     @Override
     public DepartementResponse getDepartmentById(Long departmentId) {
-        System.out.println("entreeer");
         if(departementRepository.findById(departmentId).isEmpty()){
             throw new DepartementNotFoundExceptiom();
         }
@@ -50,8 +58,9 @@ public class DepartementServiceImpl implements DepartementService{
                     "Department with this id"+departmentId+" is not found"
             );
         }
-        System.out.println("passer tous sa");
-        return mapToDepartmentResponse(departement.get());
+        DepartementResponse departementResponse = mapper.map(departement.get(),DepartementResponse.class);
+        //return mapToDepartmentResponse(departement.get());
+        return departementResponse;
     }
 
     @Override
@@ -78,11 +87,11 @@ public class DepartementServiceImpl implements DepartementService{
                 .departmentCode(departement.getDepartmentCode())
                 .build();
     }
-    private Departement mapToDepartment(DepartementRequest departementRequest) {
-        return Departement.builder()
-                .departmentName(departementRequest.getDepartmentName())
-                .departmentAddress(departementRequest.getDepartmentAddress())
-                .departmentCode(departementRequest.getDepartmentCode())
-                .build();
-    }
+//    private Departement mapToDepartment(DepartementRequest departementRequest) {
+//        return Departement.builder()
+//                .departmentName(departementRequest.getDepartmentName())
+//                .departmentAddress(departementRequest.getDepartmentAddress())
+//                .departmentCode(departementRequest.getDepartmentCode())
+//                .build();
+//    }
 }

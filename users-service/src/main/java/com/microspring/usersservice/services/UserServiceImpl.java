@@ -8,6 +8,7 @@ import com.microspring.usersservice.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UsersService{
     private final UsersRepository usersRepository;
     private final RestTemplate restTemplate;
+    private final ModelMapper mapper;
 
 //    public UserServiceImpl(@Value("${departmentservice.base.url}") String departmentUrl,RestTemplateBuilder builder) {
 //        this.restTemplate = builder.rootUri(departmentUrl).build();
@@ -35,10 +37,13 @@ public class UserServiceImpl implements UsersService{
             throw new UserWithEmailExistAlreadyException();
         }
         validateUser(userRequest);
-        Users user = maptoUser(userRequest);
+        Users user = mapper.map(userRequest,Users.class);
+        //Users user = maptoUser(userRequest);
         usersRepository.save(user);
         log.info("User with the id {} is saved",user.getId());
-        return maptoUserResponse(user);
+        //return maptoUserResponse(user);
+        UserResponse userResponse= mapper.map(user,UserResponse.class);
+        return  userResponse;
     }
 
 
@@ -50,7 +55,8 @@ public class UserServiceImpl implements UsersService{
         if(usersOptional.isEmpty()){
             throw new UserNotFoundException();
         }
-        UserDto userDto = maptoUserDto(usersOptional.get());
+        UserDto userDto = mapper.map(usersOptional.get(),UserDto.class);
+        //UserDto userDto = maptoUserDto(usersOptional.get());
         String url = "http://localhost:8081/api/v1/departments/"+usersOptional.get().getDepartmentId();
         ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
         DepartementDto departementDto = responseEntity.getBody();
@@ -78,29 +84,29 @@ public class UserServiceImpl implements UsersService{
             );
         }
     }
-    private Users maptoUser(UserRequest userRequest) {
-        return Users.builder()
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .email(userRequest.getEmail())
-                .departmentId(userRequest.getDepartmentId())
-                .build();
-    }
-    private UserResponse maptoUserResponse(Users user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .departmentId(user.getDepartmentId())
-                .build();
-    }
-    private UserDto maptoUserDto(Users user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .build();
-    }
+//    private Users maptoUser(UserRequest userRequest) {
+//        return Users.builder()
+//                .firstName(userRequest.getFirstName())
+//                .lastName(userRequest.getLastName())
+//                .email(userRequest.getEmail())
+//                .departmentId(userRequest.getDepartmentId())
+//                .build();
+//    }
+//    private UserResponse maptoUserResponse(Users user) {
+//        return UserResponse.builder()
+//                .id(user.getId())
+//                .firstName(user.getFirstName())
+//                .lastName(user.getLastName())
+//                .email(user.getEmail())
+//                .departmentId(user.getDepartmentId())
+//                .build();
+//    }
+//    private UserDto maptoUserDto(Users user) {
+//        return UserDto.builder()
+//                .id(user.getId())
+//                .firstName(user.getFirstName())
+//                .lastName(user.getLastName())
+//                .email(user.getEmail())
+//                .build();
+//    }
 }
