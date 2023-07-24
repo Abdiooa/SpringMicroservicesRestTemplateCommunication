@@ -40,8 +40,15 @@ jobs:
         uses: jakejarvis/wait-action@master
         with:
           time: '60s'
+      - name: Running Containers
+        run: docker ps
       - name: Run JUnit Tests
-        run: mvn -f pom.xml --batch-mode --batch-mode --update-snapshots test
+        run: |
+          cd departement-service
+          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots test
+          cd ..
+          cd users-service
+          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots test
       - name: Running Containers
         run: docker ps
       - name: Stop Containers
