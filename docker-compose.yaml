@@ -9,6 +9,7 @@ services:
     depends_on:
       - db
       - departementapp
+      - registryapp
   departementapp:
     container_name: springdepartement
     image: springdepartement
@@ -17,6 +18,13 @@ services:
       - "8081:8081"
     depends_on:
       - db
+      - registryapp
+  registryapp:
+    container_name: springregistry
+    image: springregistry
+    build: service-registry/
+    ports:
+      - "8761:8761"
   db:
     container_name: db
     image: postgres

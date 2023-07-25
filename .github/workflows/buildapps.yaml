@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - master
+      - registrybranch
   pull_request:
     branches:
       - master
+      - -registrybranch
 jobs:
   build:
     name: Pipeline
@@ -27,9 +29,22 @@ jobs:
         run: |
           cd departement-service
           mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
+          cd target
+          ls
+          cd ..
           cd ..
           cd users-service
           mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
+          cd target
+          ls
+          cd ..
+          cd ..
+          cd service-registry
+          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
+          cd target
+          ls
+          cd ..
+          cd ..
       - name: Build Images
         run: docker compose build
       - name: Created Images

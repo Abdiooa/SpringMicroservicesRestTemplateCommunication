@@ -57,7 +57,7 @@ public class UserServiceImpl implements UsersService{
         }
         UserDto userDto = mapper.map(usersOptional.get(),UserDto.class);
         //UserDto userDto = maptoUserDto(usersOptional.get());
-        String url = "http://localhost:8081/api/v1/departments/"+usersOptional.get().getDepartmentId();
+        String url = "http://DEPARTMENT-SERVICE/api/v1/departments/"+usersOptional.get().getDepartmentId();
         ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
         DepartementDto departementDto = responseEntity.getBody();
         System.out.println(responseEntity.getStatusCode());
