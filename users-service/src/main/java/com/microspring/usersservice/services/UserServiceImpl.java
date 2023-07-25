@@ -3,6 +3,7 @@ package com.microspring.usersservice.services;
 import com.microspring.usersservice.dto.*;
 import com.microspring.usersservice.exceptions.UserNotFoundException;
 import com.microspring.usersservice.exceptions.UserWithEmailExistAlreadyException;
+import com.microspring.usersservice.feignInter.APIClient;
 import com.microspring.usersservice.models.Users;
 import com.microspring.usersservice.repositories.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,11 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UsersService{
     private final UsersRepository usersRepository;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
     private final ModelMapper mapper;
+
+    private final APIClient apiClient;
+
 
 //    public UserServiceImpl(@Value("${departmentservice.base.url}") String departmentUrl,RestTemplateBuilder builder) {
 //        this.restTemplate = builder.rootUri(departmentUrl).build();
@@ -58,10 +62,11 @@ public class UserServiceImpl implements UsersService{
         UserDto userDto = mapper.map(usersOptional.get(),UserDto.class);
         //UserDto userDto = maptoUserDto(usersOptional.get());
         String url = "http://localhost:8081/api/v1/departments/"+usersOptional.get().getDepartmentId();
-        ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
-        DepartementDto departementDto = responseEntity.getBody();
-        System.out.println(responseEntity.getStatusCode());
+        //ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
+        //DepartementDto departementDto = responseEntity.getBody();
+        //System.out.println(responseEntity.getStatusCode());
 
+        DepartementDto departementDto = apiClient.getDepartmentById(Long.valueOf(usersOptional.get().getDepartmentId()));
         responseDto.setUserDto(userDto);
         responseDto.setDepartementDto(departementDto);
         return responseDto;
