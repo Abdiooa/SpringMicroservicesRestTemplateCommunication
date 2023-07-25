@@ -2,10 +2,10 @@ name: Github Action Build App Workflow
 on:
   push:
     branches:
-      - master
+      - [master, develop]
   pull_request:
     branches:
-      - master
+      - [master,develop]
 jobs:
   build:
     name: Pipeline
