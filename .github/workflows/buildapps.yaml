@@ -27,23 +27,22 @@ jobs:
             maven-version: 3.6.3
       - name: Build Apps
         run: |
+          cd service-registry
+          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
+          cd ..
           cd departement-service
           mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
-          cd target
-          ls
-          cd ..
+#          cd target
+#          java -jar -Dserver.port=8055 departement-service-0.0.1-SNAPSHOT.jar
+#          java -jar -Dserver.port=8065 departement-service-0.0.1-SNAPSHOT.jar
+#          cd ..
           cd ..
           cd users-service
           mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
-          cd target
-          ls
-          cd ..
-          cd ..
-          cd service-registry
-          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots clean install -DskipTests
-          cd target
-          ls
-          cd ..
+#          cd target
+#          java -jar -Dserver.port=8091 users-service-0.0.1-SNAPSHOT.jar
+#          java -jar -Dserver.port=8093 users-service-0.0.1-SNAPSHOT.jar
+#          cd ..
           cd ..
       - name: Build Images
         run: docker compose build
@@ -64,6 +63,7 @@ jobs:
 #          mvn -f pom.xml --batch-mode --batch-mode --update-snapshots test
       - name: Running Containers
         run: docker ps
+
       - name: Stop Containers
         if: always()
         continue-on-error: true
