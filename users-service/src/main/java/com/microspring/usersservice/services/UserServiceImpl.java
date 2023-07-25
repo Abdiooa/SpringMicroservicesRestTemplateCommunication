@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,8 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UsersService{
     private final UsersRepository usersRepository;
-    private final RestTemplate restTemplate;
+    //private final RestTemplate restTemplate;
+    private final WebClient webClient;
     private final ModelMapper mapper;
 
 //    public UserServiceImpl(@Value("${departmentservice.base.url}") String departmentUrl,RestTemplateBuilder builder) {
@@ -58,10 +60,11 @@ public class UserServiceImpl implements UsersService{
         UserDto userDto = mapper.map(usersOptional.get(),UserDto.class);
         //UserDto userDto = maptoUserDto(usersOptional.get());
         String url = "http://localhost:8081/api/v1/departments/"+usersOptional.get().getDepartmentId();
-        ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
-        DepartementDto departementDto = responseEntity.getBody();
-        System.out.println(responseEntity.getStatusCode());
-
+        //ResponseEntity<DepartementDto> responseEntity = restTemplate.getForEntity(url, DepartementDto.class);
+        //DepartementDto departementDto = responseEntity.getBody();
+        //System.out.println(responseEntity.getStatusCode());
+        DepartementDto departementDto = webClient.get().uri(url).retrieve()
+                        .bodyToMono(DepartementDto.class).block();
         responseDto.setUserDto(userDto);
         responseDto.setDepartementDto(departementDto);
         return responseDto;
