@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - master
+      - feignbranch
   pull_request:
     branches:
       - master
+      - feignbranch
 jobs:
   build:
     name: Pipeline
