@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class DepartementServiceImpl implements DepartementService{
-    private final DepartementRepository departementRepository;
-    private final ModelMapper mapper;
+    private DepartementRepository departementRepository;
+    private ModelMapper mapper;
     @Override
     public List<DepartementResponse> getAllDepartments() {
         //return departementRepository.findAll().stream().map(this::mapToDepartmentResponse).collect(Collectors.toList());
