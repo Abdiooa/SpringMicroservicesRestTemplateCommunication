@@ -5,6 +5,7 @@ import com.microspring.departementservice.dto.DepartementResponse;
 import com.microspring.departementservice.exceptions.DepartementNotFoundExceptiom;
 import com.microspring.departementservice.exceptions.DepartmentWithThatNameAlreadyExist;
 import com.microspring.departementservice.services.DepartementService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
-@Validated
 @Slf4j
 public class DepartementController {
     private final DepartementService departementService;
     @PostMapping("")
-    public ResponseEntity<?> createDepartment(@RequestBody DepartementRequest departementRequest){
+    public ResponseEntity<?> createDepartment(@RequestBody @Valid DepartementRequest departementRequest){
         try{
             DepartementResponse departementResponse = departementService.saveDepartement(departementRequest);
             return new ResponseEntity<>(departementResponse,HttpStatus.CREATED);

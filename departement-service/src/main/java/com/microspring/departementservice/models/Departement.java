@@ -1,6 +1,8 @@
 package com.microspring.departementservice.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -21,7 +23,14 @@ public class Departement {
             strategy = GenerationType.SEQUENCE
     )
     private Long id;
+    @Column(name = "department_name",nullable = false)
+//    @NotEmpty
+//    @Size(min = 2, message = " department name should have at least 2 characters")
     private String departmentName;
+//    @NotEmpty
+//    @Size(min = 2, message = " department address should have at least 2 characters")
     private String departmentAddress;
+//    @NotEmpty
+//    @Size(min = 2, message = " department name should have at least 2 characters")
     private String departmentCode;
 }

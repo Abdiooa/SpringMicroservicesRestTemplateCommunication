@@ -36,7 +36,7 @@ public class DepartementServiceImpl implements DepartementService{
         if(departementRepository.existsByDepartmentName(departementRequest.getDepartmentName())){
             throw new DepartmentWithThatNameAlreadyExist();
         }
-        validateInput(departementRequest);
+        //validateInput(departementRequest);
         Departement departement = mapper.map(departementRequest,Departement.class);
 //        Departement departement = mapToDepartment(departementRequest);
         departementRepository.save(departement);
